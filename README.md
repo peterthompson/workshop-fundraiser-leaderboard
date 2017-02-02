@@ -290,3 +290,56 @@ render(
 ```
 
 **tag:** `07-creating-our-project-structure`
+
+## 8. Snapshot testing
+
+The `App` component is relatively simple and a good candidate for snapshot testing.
+
+Install `jest` and `react-test-renderer`.
+
+```bash
+npm install --save-dev jest react-test-renderer
+```
+
+Create a `__tests__` directory inside the `components` directory.
+
+Inside the `__tests__` directory create an `App.test.js` file.
+
+```javascript
+import React from 'react';
+import renderer from 'react-test-renderer';
+import App from '../App';
+
+describe('App', () => {
+
+  it('renders correctly', () => {
+    const tree = renderer.create(
+      <App />
+    ).toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+
+});
+```
+
+Add an npm script for `test`.
+
+```json
+...
+"scripts": {
+  "clean": "rimraf dist",
+  "start": "webpack-dev-server",
+  "build": "npm run clean && webpack",
+  "build:prod": "npm run clean && webpack -p",
+  "test": "jest"
+},
+...
+```
+
+The first time we run our snapshot test, a snapshot will be created. The subsequent times will use this snapshot to detect changes.
+
+```bash
+npm run test
+```
+
+**tag:** `08-snapshot-testing`
