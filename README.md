@@ -536,3 +536,140 @@ Notice the use of `process.nextTick()`. Our fetch request is asynchronous, we ca
 Are you wondering [what the heck is the event loop anyway?](https://www.youtube.com/watch?v=8aGhZQkoFbQ).
 
 **tag:** `10-mocking-our-api`
+
+## 11. Implementing our Fundraising component
+
+Continuing the TDD approach, let us create the tests for the `Fundraising` component.
+
+Install `enzyme` and `react-addons-test-utils`.
+
+```bash
+npm install --save-dev enzyme react-addons-test-utils
+```
+
+Create a `Fundraisers.test.js` file inside the `components/__tests__` directory.
+
+```javascript
+jest.mock('../../api');
+jest.useFakeTimers();
+
+import React from 'react';
+import { mount } from 'enzyme';
+import { fetchFundraisers, setResponse } from '../../api';
+import Fundraisers from '../Fundraisers';
+
+const fundraisers = [
+  { amount: 37104.00, name: 'Campbell Josephine and Libby Naylor' },
+  { amount: 28827.83, name: 'Jenny payne' },
+  { amount: 17350, name: 'Simon Gillespie' },
+];
+
+describe('Fundraisers', () => {
+  describe('when data is available', () => {
+    it('renders a list of fundraisers', () => {
+      setResponse(fundraisers);
+
+      const component = mount(<Fundraisers />);
+
+      expect(component.text()).toBe('Loading…');
+
+      jest.runAllTicks(() => {
+        fundraisers.forEach(fundraiser => {
+          expect(component.text()).toContain(fundraiser.name);
+          expect(component.text()).toContain(fundraiser.amount);
+        })
+      });
+    });
+  });
+
+  describe('when data is unavailable', () => {
+    it('renders the text "Data Unavailable"', () => {
+      setResponse(Error('Data Unavailable'));
+
+      const component = mount(<Fundraisers />);
+
+      expect(component.text()).toBe('Loading…');
+
+      jest.runAllTicks(() => {
+        expect(component.text()).toBe('Data Unavailable');
+      });
+    });
+  });
+});
+```
+
+We are introducing a lot of new concepts in this one file, take some time to go through it.
+
+Notice the use of `jest.runAllTicks()`. Our `Fundraisers` component will contain several asynchronous operations, so we have to ensure that it is has finished before asserting on the rendered output.
+
+Notice the use of `forEach` to generate expectations. If you have a lot of assertions or tests that are similar then this 'roll-up' technique is useful for making your tests easier to maintain.
+
+We are relying on our api mock implementation heavily throughout these tests. You can see that the `api` module is rewired at the top of the file `jest.mock('../../api')`.
+
+Finally let us finish the `Fundraiser` component implementation.
+
+Install `lodash.uniqueid`, we are going to need it to generate unique keys.
+
+```bash
+npm install --save lodash.uniqueid
+```
+
+Update the `Fundraiser.js` file to get the tests passing.
+
+```javascript
+import React, { Component } from 'react';
+import uniqueId from 'lodash/uniqueId';
+import { fetchFundraisers } from '../api';
+
+class Fundraisers extends Component {
+
+  constructor() {
+    super();
+    this.state = {
+      isLoading: true,
+      fundraisers: null,
+      isError: false,
+    };
+  }
+
+  componentDidMount() {
+    fetchFundraisers()
+      .then(fundraisers => {
+        this.setState({
+          isLoading: false,
+          fundraisers,
+          isError: false,
+        })
+      })
+      .catch(err => {
+        this.setState({
+          isLoading: false,
+          fundraisers: null,
+          isError: true,
+        });
+      })
+  }
+
+  render() {
+    const { isLoading, fundraisers, isError, } = this.state;
+
+    if (isError) return (<div>Data Unavailable</div>);
+
+    if (isLoading) return (<div>Loading&hellip;</div>);
+
+    return (
+      <div>
+        <ol>
+          { fundraisers.map(({ name, amount }) => (
+            <li key={uniqueId()}>&pound;{amount} - {name}</li>
+          )) }
+        </ol>
+      </div>
+    );
+  }
+}
+
+export default Fundraisers;
+```
+
+**tag:** `11-implementing-our-fundraisers-component`
