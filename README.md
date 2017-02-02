@@ -81,3 +81,84 @@ Create an `index.html` file in the `src` directory.
 [Learn more about the document head](https://github.com/joshbuchea/HEAD).
 
 **tag:** `03-creating-our-index`
+
+## 4. Setting up Webpack and Babel
+
+Install `babel-core` and the presets `babel-preset-latest` to transpile the latest version of ECMAScript, and `babel-preset-react` to transpile JSX.
+
+```bash
+npm install --save-dev babel-core babel-preset-latest babel-preset-react
+```
+
+Next install `webpack`, `webpack-dev-server` and `html-webpack-plugin`.
+
+```bash
+npm install --save-dev webpack@^2.2.1 webpack-dev-server html-webpack-plugin
+```
+
+To use Babel to transpile JavaScript files inside Webpack we will need `babel-loader`.
+
+```bash
+npm install --save-dev babel-loader
+```
+
+Create a `.babelrc` file in the project root.
+
+```json
+{
+  "presets": [ "latest", "react" ]
+}
+```
+
+Create a `webpack.config.js` file also in the project root.
+
+```javascript
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+
+module.exports = {
+  entry: './src/index.js',
+  output: {
+    filename: 'bundle.js',
+    path: 'dist',
+  },
+  module: {
+    rules: [
+      {
+        test: /\.js$/,
+        loader: 'babel-loader',
+      }
+    ]
+  },
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: './src/index.html',
+    }),
+  ],
+};
+```
+
+We can now use Webpack to build our application.
+
+```bash
+./node_modules/.bin/webpack
+```
+
+Notice that a `dist` directory has been created. Add this to the `.gitignore`.
+
+```
+# dependencies
+node_modules
+
+# builds
+dist
+```
+
+We can also use webpack-dev-server to both build and serve our application.
+
+```bash
+./node_modules/.bin/webpack-dev-server
+```
+
+Open the application at [http://localhost:8080](http://localhost:8080).
+
+**tag:** `04-setting-up-webpack-and-babel`
