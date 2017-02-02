@@ -1,0 +1,12 @@
+{
+  "name": "workshop-fundraiser-leaderboard",
+  "version": "1.0.0",
+  "description": "The aim of this workshop is to provide an introduction to authoring and testing React.js applications.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
