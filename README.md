@@ -343,3 +343,164 @@ npm run test
 ```
 
 **tag:** `08-snapshot-testing`
+
+## 9. Making API calls
+
+We are going to use the JustGiving platform for our data.
+
+Create an account on [JustGiving Developer](https://developer.justgiving.com/) to obtain an `appId`.
+
+Choose a `charityId` from one of the charities below.
+
+	| Charity                                                                       | ID     |
+	|-------------------------------------------------------------------------------|--------|
+	| [British Heart Foundation](https://www.justgiving.com/britishheartfoundation) | 183092 |
+	| [Macmillan Cancer Support](https://www.justgiving.com/macmillan)              | 2116   |
+	| [Cancer Research UK](https://www.justgiving.com/cancerresearchuk)             | 2357   |
+	| [Oxfam](https://www.justgiving.com/oxfam)                                     | 13441  |
+	| [National Trust](https://www.justgiving.com/nationaltrust)                    | 183560 |
+	| [Save the Children](https://www.justgiving.com/savethechildren)               | 18570  |
+
+The endpoint for our data is `https://api.justgiving.com/{appId}/v1/charity/{charityId}/leaderboard`
+
+Use a tool such as [Postman](https://www.getpostman.com) to retrieve an example response from this endpoint.
+
+Notice that the format of the response is XML. Add a `'Content-Type'` header value of `'application/json'` to change the response format to JSON.
+
+Create an `api` directory inside the `src` directory.
+
+Create a `__data__` directory inside the `api` directory.
+
+Create a `fundraisers.json` file with the body of the endpoint response.
+
+We are going to use this data for testing our network calls so truncate the `pages` array in the `fundraisers.json` file to just a few items in order to make our tests a bit more concise.
+
+We should have a fairly good idea what we are doing here, so a TDD approach is appropriate.
+
+Let us start by defining the interface for our api.
+
+Create an `index.js` file inside the `api` directory.
+
+```javascript
+export const appId = 'put_your_appId_here';
+export const charityId = 'put_your_charityId_here';
+export const baseUrl = 'https://api.justgiving.com';
+export const fundraisersPath = `/${appId}/v1/charity/${charityId}/leaderboard`;
+
+export function fetchFundraisers() {}
+```
+
+Next we can write out tests.
+
+Install `nock` to mock the external endpoint.
+
+```bash
+npm install --save-dev nock
+```
+
+Create a `__tests__` directory inside the `api` directory.
+
+Create an `index.test.js` file inside the `__tests__` directory.
+
+```javascript
+import nock from 'nock';
+import { fetchFundraisers, baseUrl, fundraisersPath } from '../';
+
+const fundraisers = [
+  { amount: 37104.00, name: 'Campbell Josephine and Libby Naylor' },
+  { amount: 28827.83, name: 'Jenny payne' },
+  { amount: 17350, name: 'Simon Gillespie' },
+];
+
+describe('fetchFundraisers', () => {
+  describe('when data is available', () => {
+    beforeAll(() => {
+      nock(baseUrl)
+        .get(fundraisersPath)
+        .replyWithFile(200, __dirname + '/../__data__/fundraisers.json');
+    });
+
+    afterAll(() => {
+      nock.cleanAll();
+    });
+
+    it('returns a list of fundraisers', () => {
+      return fetchFundraisers()
+        .then(fundraisers => expect(fundraisers).toEqual(fundraisers));
+    });
+  });
+
+  describe('when data is unavailable', () => {
+    beforeAll(() => {
+      nock(baseUrl)
+        .get(fundraisersPath)
+        .reply(404);
+    });
+
+    afterAll(() => {
+      nock.cleanAll();
+    });
+
+    it('returns an error', () => {
+      return fetchFundraisers()
+        .catch(err => expect(err).toEqual(Error('Data Unavailable')));
+    });
+  });
+});
+```
+
+Run the tests.
+
+```bash
+npm run test
+```
+
+We now have some failing tests to fix.
+
+Install `isomorphic-fetch`, but note that we can use almost any AJAX library for our service calls.
+
+```bash
+npm install --save isomorphic-fetch
+```
+
+Update the `index.js` file inside the `api` directory to fix the tests.
+
+```javascript
+import fetch from 'isomorphic-fetch';
+
+export const appId = 'put_your_appId_here';
+export const charityId = 'put_your_charityId_here';
+export const baseUrl = 'https://api.justgiving.com';
+export const fundraisersPath = `/${appId}/v1/charity/${charityId}/leaderboard`;
+
+export function fetchFundraisers() {
+  return fetch(baseUrl + fundraisersPath, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+    })
+    .then(errorHandler)
+    .then(res => res.json())
+    .then(res => res.pages)
+    .then(pages => pages.map(page => ({
+      amount: page.amount.toFixed(2),
+      name: page.owner
+    })));
+}
+
+function errorHandler(res) {
+  if (!res.ok) {
+    throw Error('Data Unavailable');
+  }
+  return res;
+}
+```
+
+Run the tests again.
+
+```bash
+npm run test
+```
+
+They should now be passing.
+
+**tag:** `09-making-api-calls`
