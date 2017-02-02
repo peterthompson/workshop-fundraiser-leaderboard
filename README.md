@@ -213,3 +213,29 @@ Add a `clean` script to `package.json` file that uses `rimraf` to clean the `dis
 ```
 
 **tag:** `05-npm-scripts`
+
+## 6. Production builds
+
+Notice the size of the `bundle.js` file. It is not optimised for production.
+
+Use webpack's default production settings to create an optimised `bundle.js` file.
+
+```bash
+./node_modules/.bin/webpack -p
+```
+
+Add an npm script for `build:prod`.
+
+```json
+...
+"scripts": {
+  "clean": "rimraf dist",
+  "start": "webpack-dev-server",
+  "build": "npm run clean && webpack",
+  "build:prod": "npm run clean && webpack -p",
+  "test": "echo \"Error: no test specified\" && exit 1"
+},
+...
+```
+
+**tag:** `06-production-builds`
