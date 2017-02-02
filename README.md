@@ -27,3 +27,34 @@ echo '# Fundraiser Leaderboard' > README.md
 ```
 
 **tag:** `01-setting-up-our-project`
+
+## 2. Our first React component
+
+Install `react` and `react-dom`.
+
+```bash
+npm install --save react react-dom
+```
+
+Add `node_modules` to a `.gitignore` file in the root of our project.
+
+```
+# dependencies
+node_modules
+```
+
+Create a `src` directory in the root of our project.
+
+Create our first React component called `index.js` in the `src` directory.
+
+```javascript
+import React from 'react';
+import { render } from 'react-dom';
+
+render(
+  <div>Hello World</div>,
+  document.getElementById('root'),
+);
+```
+
+**tag:** `02-our-first-react-component`
