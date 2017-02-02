@@ -58,3 +58,26 @@ render(
 ```
 
 **tag:** `02-our-first-react-component`
+
+## 3. Creating our index.html
+
+Create an `index.html` file in the `src` directory.
+
+```html
+<!doctype HTML>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Fundraiser Leaderboard</title>
+  </head>
+  <body>
+  <div id="root"></div>
+  </body>
+</html>
+```
+
+[Learn more about the document head](https://github.com/joshbuchea/HEAD).
+
+**tag:** `03-creating-our-index`
