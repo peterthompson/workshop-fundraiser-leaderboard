@@ -673,3 +673,14 @@ export default Fundraisers;
 ```
 
 **tag:** `11-implementing-our-fundraisers-component`
+
+## 12. That's all folks!
+
+We have covered,
+
+* Bundling an application with [Webpack](https://webpack.js.org)
+* Transpiling code with [Babel](https://babeljs.io)
+* Creating UI components with [React.js](https://facebook.github.io/react)
+* Testing an application with [Jest](https://facebook.github.io/jest)
+
+**tag:** `12-thats-all-folks`
