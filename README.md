@@ -162,3 +162,54 @@ We can also use webpack-dev-server to both build and serve our application.
 Open the application at [http://localhost:8080](http://localhost:8080).
 
 **tag:** `04-setting-up-webpack-and-babel`
+
+## 5. npm scripts
+
+Instead of using the `node_modules/.bin` directory let us add some npm scripts.
+
+Add a `start` and `build` script to the `package.json` file.
+
+```json
+...
+"scripts": {
+  "start": "webpack-dev-server",
+  "build": "webpack",
+  "test": "echo \"Error: no test specified\" && exit 1"
+},
+...
+```
+
+We can now use these scripts to build the application,
+
+```bash
+npm run build
+```
+
+and to start the application with webpack-dev-server
+
+```bash
+npm start
+```
+
+Notice how the dist directory is never cleared between builds. Let's fix that.
+
+Install `rimraf`.
+
+```bash
+npm install --save-dev rimraf
+```
+
+Add a `clean` script to `package.json` file that uses `rimraf` to clean the `dist` directory. Update the `build` script to ensure that `clean` is called first.
+
+```json
+...
+"scripts": {
+  "clean": "rimraf dist",
+  "start": "webpack-dev-server",
+  "build": "npm run clean && webpack",
+  "test": "echo \"Error: no test specified\" && exit 1"
+},
+...
+```
+
+**tag:** `05-npm-scripts`
