@@ -504,3 +504,35 @@ npm run test
 They should now be passing.
 
 **tag:** `09-making-api-calls`
+
+## 10. Mocking our API
+
+We are going to want to use the api we just created inside our `Fundraiser` component. When we write our unit tests for this component we will want to isolate it from our api implementation and avoid unnecessary coupling.
+
+To do this we will create a mock of our api which can be used elsewhere.
+
+Create a `__mocks__` directory inside the `api` directory.
+
+Create an `index.js` file inside the `__mocks__` directory.
+
+```javascript
+let response = null;
+
+export function setResponse(res) {
+  response = res;
+}
+
+export function fetchFundraisers() {
+  return new Promise((resolve, reject) => {
+    process.nextTick(() => response instanceof Error ? reject(response) : resolve(response));
+  });
+}
+```
+
+The mock implementation is fairly crude, but it will do for `Fundraisers` component unit tests.
+
+Notice the use of `process.nextTick()`. Our fetch request is asynchronous, we can mimic this by resolving the promise on the next cycle of the event loop i.e. the next tick.
+
+Are you wondering [what the heck is the event loop anyway?](https://www.youtube.com/watch?v=8aGhZQkoFbQ).
+
+**tag:** `10-mocking-our-api`
