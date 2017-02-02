@@ -239,3 +239,54 @@ Add an npm script for `build:prod`.
 ```
 
 **tag:** `06-production-builds`
+
+## 7. Creating our project structure
+
+Here we will create the skeleton of our project.
+
+Create a `components` directory inside the `src` directory.
+
+Inside the `components` directory create a `Fundraisers` component.
+
+```javascript
+import React, { Component } from 'react';
+
+class Fundraisers extends Component {
+  render() {
+    return (<div>Loading&hellip;</div>);
+  }
+}
+
+export default Fundraisers;
+```
+
+In the same directory create an `App` component.
+
+```javascript
+import React from 'react';
+import Fundraisers from './Fundraisers';
+
+const App = () => (
+  <div>
+    <h1>Fundraiser Leaderboard</h1>
+    <Fundraisers />
+  </div>
+);
+
+export default App;
+```
+
+Update our first React component (`index.js`) to include our new `App` component.
+
+```javascript
+import React from 'react';
+import { render } from 'react-dom';
+import App from './components/App';
+
+render(
+  <App />,
+  document.getElementById('root'),
+);
+```
+
+**tag:** `07-creating-our-project-structure`
