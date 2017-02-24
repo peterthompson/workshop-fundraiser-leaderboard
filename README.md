@@ -352,14 +352,14 @@ Create an account on [JustGiving Developer](https://developer.justgiving.com/) t
 
 Choose a `charityId` from one of the charities below.
 
-	| Charity                                                                       | ID     |
-	|-------------------------------------------------------------------------------|--------|
-	| [British Heart Foundation](https://www.justgiving.com/britishheartfoundation) | 183092 |
-	| [Macmillan Cancer Support](https://www.justgiving.com/macmillan)              | 2116   |
-	| [Cancer Research UK](https://www.justgiving.com/cancerresearchuk)             | 2357   |
-	| [Oxfam](https://www.justgiving.com/oxfam)                                     | 13441  |
-	| [National Trust](https://www.justgiving.com/nationaltrust)                    | 183560 |
-	| [Save the Children](https://www.justgiving.com/savethechildren)               | 18570  |
+| Charity                                                                       | ID     |
+|-------------------------------------------------------------------------------|--------|
+| [British Heart Foundation](https://www.justgiving.com/britishheartfoundation) | 183092 |
+| [Macmillan Cancer Support](https://www.justgiving.com/macmillan)              | 2116   |
+| [Cancer Research UK](https://www.justgiving.com/cancerresearchuk)             | 2357   |
+| [Oxfam](https://www.justgiving.com/oxfam)                                     | 13441  |
+| [National Trust](https://www.justgiving.com/nationaltrust)                    | 183560 |
+| [Save the Children](https://www.justgiving.com/savethechildren)               | 18570  |
 
 The endpoint for our data is `https://api.justgiving.com/{appId}/v1/charity/{charityId}/leaderboard`
 
